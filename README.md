@@ -30,8 +30,8 @@ Um länger herumzuspielen ist es allerdings komfortabler, sich eine Entwicklunsu
 * Unter "autoconnect_comport_manufacturers" „Silicon labs“ angenen (, nicht vergessen)
 
 
-### Grundbefehle:
-Variablen
+## Grundbefehle
+### Variablen
 In der REPL können nun Variablen zugeordnet werden, das können Zahlen oder Text sein:
 ```
 >>> x=1
@@ -126,10 +126,10 @@ Funktionen werden mit Parametern in runden Klammern aufgerufen. Es gibt viele be
 ```
 
 
-### Klassen:
+### Klassen
 Komplexe Gruppen von Variablen und Funktionen Können in Klassen zusammengefasst werden, z.B. um Sensoren zu beschreiben, die eine Bestimmte Funktionalität bereitstellen, so wie die LED in dem Beispiel oben.
 
-### Module:
+### Module
 Mehrere Klassen, Funktionen und Variablen können in Modulen zusammengefasst werden, damit diese bei Bedarf importiert werden können:
 ```
 >>>import time # Das „time modul“ wird importiert
@@ -143,17 +143,70 @@ Es gibt viele Mircopython spezifische Module, um die Hardware zu steuern. Die LE
 >>>import machine
 >>>led=machine.Pin(5, machine.Pin.OUT)
 ```
-Dabei ist Pin eine Klasse, und PIN.OUT eine Variable innerhalb der Klasse
+Dabei ist Pin eine Klasse, und PIN.OUT eine Variable innerhalb der Klasse.
+Für mehr Details gibt es den Aufruf der hilfefunktion:
+```
+help(machine.Pin)
+```
+stellt alle Funktionen der Pin Klasse dar.
 
-### Programmablauf
-Bei jedem Start führt der uC zunächst die Datei „boot.py“, dann die Datei „main.py“ aus. In der boot.py wird zB das wlan eingerichtet. Typischerweise, d.h. wenn der uC ohne Eingabe über die REPL eine Aufgabe erfüllen soll ist in der main.py eine Endlosschleife. Wenn nicht hört das Programm nach der main.py auf und wartet auf weitere Befehle über die REPL. Wärend einer 
+## Programmablauf
+Bei jedem Start führt der uC zunächst die Datei „boot.py“, dann sofern vorhanden die Datei „main.py“ aus. Ich habe es so vorbereitet, dass in boot.py wird das wlan eingerichtet wird. Wenn die Datei um eine SSID und ein Passwort ergänzt wird dann muss nicht das Netzwerk gewechselt werden um webrepl nutzen zu können. 
+Die main.py enthält typischerweise, d.h. wenn der uC ohne Eingabe über die REPL eine Aufgabe erfüllen soll eine Endlosschleife. Wenn nicht hört das Programm nach der main.py auf und wartet auf weitere Befehle über die REPL. 
 
-### Beispiele:
+## Beispiele:
+Ich habe ein paar module zum ausprobieren zusammengestellt. Natürlich können alle zusammen verwendet werden, es sind der Phantasie keine Grenzen gesetzt. 
+### Neopixel LEDs
+Dies sind einzeln adressierbare RGB LEDs. Zunächst sollte +5V mit 5V, GND mit GND, und DIN mit einem GPIO pin, zB Pin Nr 4 verbunden werden. Die Neopixel werden dann folgendermaßen angesteuert:
+```
+import neopixel
+np=neopixel.NeoPixel(machine.Pin(4),8) #initialisiere 8 LEDs an GPIO Pin 4
+np[0]=10,10,10 # Die erste LED soll weiss (aber nicht so hell) sein
+np[1]=255,0,0 # dann 100% rot
+np[2]=0,255,0 # grün
+np[3]=0,0,255 # blau
+np.write() # die LEDs werden angesteuert
+```
 
-Neopixel LEDs
-Servo
-Spannung messen
+### Servo motor
+Kleine hobby servo Motoren können auf einen Winkel zwischen 0 und etwa 180° eingestellt werden, über eine PWM Frequenz. Die Ansteuerung wird über das Servo Modul (servo.py) erleichtert. 
+Für das Beispiel habe ich das gelbe Servo Kabel an Pin12 angeschlossen, braun an GND und rot an 5V.
+```
+from machine import Pin
+from time import sleep
+from servo import Servo
+servo = Servo(Pin(12))
+servo.setPosition(0)
+sleep(1)
+servo.setPosition(90)
+sleep(1)
+servo.setPosition(180)
+sleep(1)
+servo.deinit()
+```
+### Spannung messen
+Die Li ion Battarie (max 4.2V) ist über einen Spannungsteiler (2 mal 100k Widerstand) an GPIO 35 angeschlossen. Um die Batteriespannung zu messen kann man folgenden Code verwenden:
 
-OLED display
-Beschleunigugns und Lagesensor
+```
+import machine
+adc = machine.ADC(machine.Pin(35))
+adc.atten(machine.ADC.ATTN_11DB)
+adc.read()/4095*3.5 # pin voltage
+vbat=adc.read()/4095*7 # bat voltage
+print('baterie voltage: {}'.format(vbat))
+```
 
+### OLED Display
+Das OLED Display wird über den seriellen i2c bus angesteuert. Dieser braucht 2 Verbindungen: eine für den Takt und eine für die Daten. Über da
+
+### Beschleunigugns und Lagesensor
+Auch dieser Sensor kommuniziert über i2c. Er kann parallel zu dem Display angeschlossen werden, oder an eigene Pins. 
+### Ultrasound Entfernungsmesser
+Der Sensor funktioniert indem die Laufzeit des Schalls gemessen wird. Es wird ein Schallimpuls ausgesendet, dieser wird an einem Hindernis reflektiert und das Echo wird wieder detektiert. Die Zeitdifferenz ist proportional zur Entfernung zum Hindernis.
+```
+from ultrasonic import UltrasonicDistance
+sensor=UltrasonicDistance(14,12)
+sensor.distance()
+```
+### PIR sensor
+Dies ist ein Bewegugsmelder, basierend auf Änderungen im Infrarotbereich. Es werden also Wärmeänderungen detektiert. 
