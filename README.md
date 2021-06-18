@@ -26,7 +26,7 @@ Beim nächsten Start sollte sich der Microcontroller automatisch mit dem WLAN ve
 
 Den folgenden Abschnitt kannst du erstmal überspringen. 
 
-Um länger herumzuspielen ist es allerdings komfortabler, sich eine Entwicklunsumgebung (IDE) einzurichten. Dann kann man sich auch per USB mit der REPL verbinden. Ich empfehle VSCode mit dem pymakr plugin. Folgende Schritte sind dazu notwendig:
+Um länger herumzuspielen ist es allerdings besser, sich eine Entwicklungsumgebung (IDE) einzurichten. Dann kann man sich auch per USB mit der REPL verbinden, und viel komfortabler Programmcode schreiben. Ich empfehle VSCode mit dem pymakr plugin. Folgende Schritte sind dazu notwendig:
 * Beides installieren:
     * https://code.visualstudio.com/download
     * https://marketplace.visualstudio.com/items?itemName=pycom.Pymakr
@@ -177,7 +177,7 @@ Für mehr Details gibt es den Aufruf der Hilfefunktion:
 stellt alle Funktionen der Pin Klasse dar.
 
 ## Programmablauf
-Bei jedem Start führt der uC zunächst die Datei „boot.py“, dann sofern vorhanden die Datei „main.py“ aus. Ich habe es so vorbereitet, dass in boot.py wird das wlan eingerichtet wird. Wenn die Datei um eine SSID und ein Passwort ergänzt wird dann muss nicht das Netzwerk gewechselt werden um webrepl nutzen zu können. 
+Bei jedem Start führt der uC zunächst die Datei „boot.py“, dann sofern vorhanden die Datei „main.py“ aus. Ich habe es so vorbereitet, dass in boot.py wird das WLAN eingerichtet wird. Wenn die Datei um eine SSID und ein Passwort ergänzt wird dann muss nicht das Netzwerk gewechselt werden um webrepl nutzen zu können. 
 Die main.py enthält typischerweise, d.h. wenn der uC ohne Eingabe über die REPL eine Aufgabe erfüllen soll eine Endlosschleife. Wenn nicht hört das Programm nach der main.py auf und wartet auf weitere Befehle über die REPL. 
 
 ## Beispiele:
