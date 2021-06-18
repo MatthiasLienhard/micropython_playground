@@ -3,7 +3,7 @@ Hallo, mit dieser Anleitung lernst du MicroPython programmieren in einer halben 
 
 ## REPL
 
-Um Kommandos an den Microcontroller zu schicken und Ausgaben zu erhalten gibt es in Micropython die REPL (read eval print loop, also etwa Befehle annehmen, ausführen und Ergebnisse ausgeben Wiederholschleife). Diese ist entweder über USB oder WLAN (web-repl) erreichbar. Fürs erste ist WLAN einfacher und ausreichend. 
+Um Kommandos an den Microcontroller zu schicken und Ausgaben zu erhalten gibt es in Micropython die REPL (read eval print loop, also etwa Befehle annehmen, ausführen und Ergebnisse ausgeben Wiederholschleife). Diese ist entweder über USB oder WLAN (web-repl) erreichbar. Fürs erste ist WLAN einfacher und ausreichend. Allerdings muss man zunächst mit dem Accesspoint begnügen, da das wlan passwort noch nicht eingerichtet ist. 
 * Auf https://github.com/micropython/webrepl –> Code –> Download ZIP 
 * In einen Ordner entpacken.
 * Mit dem Access Point des Microcontrollers verbinden:
@@ -16,9 +16,17 @@ Um Kommandos an den Microcontroller zu schicken und Ausgaben zu erhalten gibt es
 ```
 >>> 
 ```
+Dort kann man jetzt Befehle eintippen. z.B. um das WLAN einzurichten und zu verbinden:
+```
+>>> set_wlan('Deine_SSID','DEIN_WLAN_PW')
+>>> connect()
+```
+Beim nächsten Start sollte sich der Microcontroller automatisch mit dem WLAN verbinden. Es können auch mehrere WLANs eingegeben werden. 
+
+
 Den folgenden Abschnitt kannst du erstmal überspringen. 
 
-Um länger herumzuspielen ist es allerdings komfortabler, sich eine Entwicklunsumgebung (IDE) einzurichten. Ich empfehle VSCode mit dem pymakr plugin. Folgende Schritte sind dazu notwendig:
+Um länger herumzuspielen ist es allerdings komfortabler, sich eine Entwicklunsumgebung (IDE) einzurichten. Dann kann man sich auch per USB mit der REPL verbinden. Ich empfehle VSCode mit dem pymakr plugin. Folgende Schritte sind dazu notwendig:
 * Beides installieren:
     * https://code.visualstudio.com/download
     * https://marketplace.visualstudio.com/items?itemName=pycom.Pymakr
@@ -27,7 +35,7 @@ Um länger herumzuspielen ist es allerdings komfortabler, sich eine Entwicklunsu
 * Das sollte einen Eintrag mit Silicon labs finden.
 * Unter „All commands“, dann „global Settings“ klicken, eine Konfigurationsdatei.
 * Unter "address" den comport (zB „COM1“) angeben, 
-* Unter "autoconnect_comport_manufacturers" „Silicon labs“ angenen (, nicht vergessen)
+* Unter "autoconnect_comport_manufacturers" „Silicon labs“ angeben (, nicht vergessen)
 
 
 ## Grundbefehle
